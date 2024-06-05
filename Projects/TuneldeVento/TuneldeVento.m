@@ -26,8 +26,8 @@ open(v);
 % Indices de aplicação das diferenças finitas
 
 Lambda = 1.85;
-Erro = 0.05;
-deltaX = 0.01;
+Erro = 0.04;
+deltaX = 0.007;
 deltaY = deltaX;
 
 
@@ -53,15 +53,18 @@ Xc = d+L/2;  % Coordenada X do centro
 Yc = h;  % Coordenada Y do centro
 carro = ((X - Xc).^2 + (Y - Yc).^2 <= R^2) & (X <= Xc) & (Y >= Yc);
 
+% Definir psi = 0 para esses pontos pertencentes ao carro
+psi(carro) = 0;
+
 % Para a regiao de contorno irregular que tem um R = R + deltaX, acima de Yc
 
 cont_Irreg1 = ((X - Xc).^2 + (Y - Yc).^2 <= (R+deltaX)^2) & (X <= Xc) & (Y >= Yc) & (~carro);
-
+%psi(cont_Irreg1) = 10;
 
 % Para a regiao abaixo da semicircunferencia
 
 cont_Irreg2 = ((Y > h-deltaY)&(Y < h)&( X > d - deltaX)&(X <= d+L/2));
-
+%psi(cont_Irreg2) = 10;
 
 
 %========================================= Iterações  
@@ -141,14 +144,6 @@ while ~convergiu
         if diff > erromax
              erromax = diff;
         end
-        
-        if (cont_Irreg1)
-            a = Y(j,i)- Y(carro);
-            b = X(j,i) - X(carro);
-        psi(i,j) = ((2 * a * psi(i,j+1)) / (deltaY^2 * (a^2 + a)) + (2 * b * psi(i-1,j)) / (deltaX^2 * (b^2 + b))) / ...
-        ((2 * (a + 1)) / (deltaY^2 * (a^2 + a)) + (2 * (b + 1)) / (deltaX^2 * (b^2 + b)));
-        end
-
         %=======================
         % Correção das laterais
         %=======================
@@ -158,15 +153,13 @@ while ~convergiu
     
         % ======= Reaplicação das condições de contorno
         
-        % Condição inferior em y, psi = 0, evitando as quinas
+        % Condição inferior em y, psi = 0
         psi(1,1:Nx) = 0;
        
         % Definir psi = 0 para esses pontos pertencentes ao carro
         psi(carro) = 0;
     end
 
-
-    %======= Fim de uma iteração========
     % Verifica se houve alguma atualização significativa
     if contador > 0
         convergiu = false;
@@ -194,14 +187,8 @@ while ~convergiu
     writeVideo(v, frame);
 end
 
-
 % Fecha o objeto de vídeo
 close(v);
-
-
-% % Salvar todas as variáveis no arquivo 'estado_matlab.mat'
-% save('Estado_err00001_delta0005.mat');
-% disp('Estado do MATLAB salvo no arquivo Estado_err001_delta00025.mat');
 
 % Plotando os dados
 figure;
@@ -252,29 +239,7 @@ ylabel('Erro Máximo');
 title('Comportamento do Erro Máximo ao Longo das Iterações');
 grid on;
 
-
-% Refletir a matriz psi em relação à coluna central sem repetir a coluna central
-psi_refletida = psi(:, end-1:-1:1);
-
-% Concatenar a matriz original com sua reflexão
-psi_completa = [psi, psi_refletida];
-
-% Verificar o resultado
-figure;
-contourf(psi_completa, 20);
-colorbar;
-xlabel('X');
-ylabel('Y');
-axis image;
-title('Distribuição Completa de Psi');
-
-% Ajustar a direção do eixo Y para corresponder ao layout cartesiano usual
-set(gca, 'YDir', 'normal');
-
-
-
-
-
+% 
 % % Plotando a superfície 3D
 % figure;
 % surf(0:deltaX:(2*d + L)/2, 0:deltaY:H, psi);
