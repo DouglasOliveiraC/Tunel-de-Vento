@@ -26,8 +26,8 @@ open(v);
 
 % Indices de aplicação das diferenças finitas
 Lambda = 1.85;
-Erro = 0.00009;
-deltaX = 0.006;
+Erro = 0.0001;
+deltaX = 0.007;
 deltaY = deltaX;
 iter = 1000;
 
@@ -479,7 +479,7 @@ contourf(X_espelhado, Y_espelhado, p_espelhado, 25);
 colorbar;
 xlabel('X');
 ylabel('Y');
-title('Campo de Pressão Completo');
+title('Campo de Pressão Dobrada');
 axis equal;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -487,35 +487,38 @@ axis equal;
 % Calculo da pressão na carroceria
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-gamma_ar = 1.4; % Razão de calores específicos para o ar
-rho = 1.225; % Densidade do ar em kg/m^3
-
-% Definir o centro da semicircunferência
-Xc = L/2; % Coordenada X do centro
-Yc = h; % Coordenada Y do centro
-R = L/2; % Raio da semicircunferência
-
-% Inicializa a força de sustentação
+% Inicializar a força de sustentação
 F_lift = 0;
+
+% Definindo deltaA como a área de um elemento de malha
+deltaA = deltaX * deltaY;
 
 % Vetores para armazenar as coordenadas e as pressões na carroceria
 x_carro = [];
 y_carro = [];
 p_carro = [];
 
-% Percorre a malha para calcular a pressão nos pontos próximos à carroceria e armazenar os valores
+% Percorre a malha para calcular a pressão na carroceria e armazenar os valores
 for j = 1:Ny
     for i = 1:Nx
-        if carro(j,i)
+        if external_mask(j,i) && Y(j,i)>Yc
             % Calcula a normal à superfície em cada ponto (j, i)
             dx = X(j,i) - Xc;
             dy = Y(j,i) - Yc;
             n = [dx; dy] / norm([dx; dy]); % Normal unitária
 
+            % Calcula a contribuição da pressão no ponto (j, i)
+            if i~=Nx
+                P = 2*p(j,i); % Pressão no ponto é duplicada se nao é a central
+            else
+                P = p(j,i); % Pressão no ponto central
+            end
+            F_lift = F_lift + P * n(2) * deltaA; % Considerando apenas a componente vertical
+
             % Armazena as coordenadas e a pressão
             x_carro = [x_carro, X(j,i)];
             y_carro = [y_carro, Y(j,i)];
-            p_carro = [p_carro, p(j,i)];
+            p_carro = [p_carro, P];
         end
     end
 end
@@ -525,18 +528,9 @@ end
 min_x = x_carro(min_idx);
 min_y = y_carro(min_idx);
 
-% Exibe a menor pressão
-disp(['A menor pressão é: ', num2str(min_p), ' Pa, no ponto (', num2str(min_x), ', ', num2str(min_y), ')']);
-
-% Calcula a pressão média ao longo da carroceria
-p_media = mean(p_carro);
-
-% Calcula a força de sustentação assumindo a pressão média ao longo da área total da semicircunferência
-area_total = pi * (R^2) / 2; % Área da semicircunferência
-F_lift = p_media * area_total;
-
 % Exibe o resultado da força de sustentação
 disp(['A força de sustentação é: ', num2str(F_lift), ' N']);
+disp(['A menor pressão é: ', num2str(min_p), ' Pa, no ponto (', num2str(min_x), ', ', num2str(min_y), ')']);
 
 % Plotar a pressão ao longo da carroceria
 figure;
