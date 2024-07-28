@@ -410,7 +410,7 @@ v(j,i) = -(psi(j,i) - psi(j-1,i)) / deltaX; % -\partial \psi / \partial x, difer
 % Isso pode ser feito usando diferenças finitas avançadas ou retroativas
 
 % Reduzindo a resolução dos vetores para visualização
-skip = 30; % Fator de redução da malha (ajuste conforme necessário)
+skip = 20; % Fator de redução da malha (ajuste conforme necessário)
 X_reduced = X(1:skip:end, 1:skip:end);
 Y_reduced = Y(1:skip:end, 1:skip:end);
 u_reduced = u(1:skip:end, 1:skip:end);
@@ -429,7 +429,7 @@ figure;
 quiver(X_espelhado, Y_espelhado, u_espelhado, v_espelhado, 'AutoScaleFactor', 1.5); % Plota os vetores de velocidade
 xlabel('X');
 ylabel('Y');
-title('Campo de Velocidades Dobrada');
+title('Campo de Velocidades Completo');
 axis equal;
 
 
