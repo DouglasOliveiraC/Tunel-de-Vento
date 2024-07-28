@@ -1,4 +1,4 @@
-![Simulações de Escoamento e Transferência de Calor](Projects/TuneldeVento/psi_completo_example.png)
+![Simulações de Escoamento e Transferência de Calor](https://github.com/DouglasOliveiraC/Tunel-de-Vento/blob/master/Projects/TuneldeVento/psi_completo_example.png)
 
 # Projeto de Simulação de Escoamento e Transferência de Calor em um Veículo
 
@@ -68,12 +68,11 @@ Este projeto tem como objetivo a simulação do escoamento de ar e a transferên
 
 
 ## Resultados
-Função de corrente ψ do escoamento: [Imagem/screenshot]
-Vetores de velocidade absoluta do escoamento: [Imagem/screenshot]
-Pressão no domínio: [Imagem/screenshot]
-Pressão ao longo da carroceria: [Imagem/screenshot]
-Força vertical resultante: [Valor numérico e gráfico]
-Contribuições
+Função de corrente ψ do escoamento: ![Simulações de Escoamento e Transferência de Calor](https://github.com/DouglasOliveiraC/Tunel-de-Vento/blob/master/Projects/TuneldeVento/psi_completo_example.png)
+Vetores de velocidade absoluta do escoamento: [[Imagem/screenshot]](https://github.com/DouglasOliveiraC/Tunel-de-Vento/blob/master/Projects/TuneldeVento/campo_vel_completo.png)
+Pressão no domínio: [[Imagem/screenshot]](https://github.com/DouglasOliveiraC/Tunel-de-Vento/blob/master/Projects/TuneldeVento/campo_pressoes.png)
+Pressão ao longo da carroceria: [[Imagem/screenshot]](https://github.com/DouglasOliveiraC/Tunel-de-Vento/blob/master/Projects/TuneldeVento/pressao_carroceria.png)
+
 Sinta-se à vontade para contribuir com este projeto. Faça um fork do repositório, crie uma nova branch e envie um pull request.
 
 ## Licença
